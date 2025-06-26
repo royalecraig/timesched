@@ -1,0 +1,86 @@
+# TimeSched Schedule — My Chronological Weekly Log
+# Format: DAY HH:MM command
+# WARNING: Some commands below use sudo and may prompt for a password.
+# To disable any action, just comment out its line.
+# Default speech system is espeak. If you have RHVoice-test installed, you may uncomment the RHVoice lines.
+
+# === MONDAY ===
+
+MON 00:00 echo "Weekly Log Reset: $(date)" > ~/Desktop/system_maintenance_log.txt
+MON 00:30 echo "[MON 00:30] APT Update & Upgrade" >> ~/Desktop/system_maintenance_log.txt
+MON 00:31 sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y >> ~/Desktop/system_maintenance_log.txt
+MON 00:45 espeak "System updated and cleaned"
+# MON 00:45 echo "System updated and cleaned" | RHVoice-test -p slt
+MON 00:46 notify-send "System Update" "APT upgrade and autoremove completed successfully."
+MON 04:00 echo "[MON 04:00] World Writable Files" >> ~/Desktop/system_maintenance_log.txt
+MON 04:01 find ~ -xdev -type f -perm -002 >> ~/Desktop/system_maintenance_log.txt
+
+# === TUESDAY ===
+
+TUE 03:00 echo "[TUE 03:00] APT Clean" >> ~/Desktop/system_maintenance_log.txt
+TUE 03:01 sudo apt clean >> ~/Desktop/system_maintenance_log.txt
+TUE 22:00 espeak "It is 10 PM"
+# TUE 22:00 echo "10 PM" | RHVoice-test -p bdl
+
+# === WEDNESDAY ===
+
+WED 02:00 echo "[WED 02:00] Journal Vacuum" >> ~/Desktop/system_maintenance_log.txt
+WED 02:01 journalctl --vacuum-time=7d >> ~/Desktop/system_maintenance_log.txt
+WED 20:00 espeak "It is 8 PM, Up and Running"
+# WED 20:00 echo "8 PM, Up and Running" | RHVoice-test -p evgeniy
+
+# === THURSDAY ===
+
+THU 07:10 echo "[THU 07:10] FreshClam Update" >> ~/Desktop/system_maintenance_log.txt
+THU 07:11 sudo freshclam >> ~/Desktop/system_maintenance_log.txt
+THU 07:20 echo "[THU 07:20] ClamAV Scan" >> ~/Desktop/system_maintenance_log.txt
+THU 07:21 sudo clamscan -r --bell -i ~ >> ~/Desktop/system_maintenance_log.txt
+THU 07:22 notify-send "Antivirus" "ClamAV scan complete."
+
+# === FRIDAY ===
+
+FRI 01:00 echo "[FRI 01:00] Broken Symlinks" >> ~/Desktop/system_maintenance_log.txt
+FRI 01:01 find ~ -xtype l >> ~/Desktop/system_maintenance_log.txt
+FRI 03:00 echo "[FRI 03:00] chkrootkit Scan" >> ~/Desktop/system_maintenance_log.txt
+FRI 03:02 sudo chkrootkit >> ~/Desktop/system_maintenance_log.txt
+FRI 03:30 echo "[FRI 03:30] rkhunter Scan" >> ~/Desktop/system_maintenance_log.txt
+FRI 03:31 sudo rkhunter --check --skip-keypress >> ~/Desktop/system_maintenance_log.txt
+FRI 03:32 notify-send "Security" "Rootkit scans complete."
+FRI 04:00 echo "[FRI 04:00] .pyc File Cleanup" >> ~/Desktop/system_maintenance_log.txt
+FRI 04:01 find ~ -type f -name '*.pyc' -delete
+FRI 10:00 espeak "It's Ten AM"
+
+# === SATURDAY ===
+
+SAT 10:00 echo "[SAT 10:00] Large Files >100MB" >> ~/Desktop/system_maintenance_log.txt
+SAT 10:01 find ~ -type f -size +100M >> ~/Desktop/system_maintenance_log.txt
+
+# === SUNDAY ====== WEEKLY SECURITY AUDIT ===
+SUN 07:00 echo "[SUN 07:00] Lynis Audit Starting..." >> ~/Desktop/system_maintenance_log.txt
+SUN 07:01 sudo lynis audit system --no-colors --quick >> ~/Desktop/system_maintenance_log.txt
+SUN 07:30 notify-send "Lynis Audit" "Weekly system audit completed."
+
+SUN 20:00 echo "[SUN 20:00] Trash Emptied" >> ~/Desktop/system_maintenance_log.txt
+SUN 20:01 gio trash --empty
+SUN 20:02 espeak "Housekeeping done. No unnecessary crap remains."
+# SUN 20:02 echo "Housekeeping done. No unnecessary crap remains." | RHVoice-test -p slt
+
+# === DAILY REMINDERS ===
+
+DAILY 07:30 espeak "Get to work now"
+# DAILY 07:30 echo "Get to work now" | RHVoice-test -p slt
+
+DAILY 11:00 espeak "Alternative voice example"
+# DAILY 11:00 echo "Alternative voice example" | RHVoice-test -p slt
+
+DAILY 19:30 espeak "It's 7:30 PM"
+# DAILY 19:30 echo "It's 7:30 PM" | RHVoice-test -p slt
+
+DAILY 22:00 espeak "It's 10 PM"
+# DAILY 22:00 echo "It's 10 PM" | RHVoice-test -p slt
+
+DAILY 23:00 espeak "It's 11 PM: Time for beauty sleep"
+# DAILY 23:00 echo "It's 11 PM: Time for beauty sleep" | RHVoice-test -p slt
+
+DAILY 21:00 btc=$(curl -s "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=gbp" | jq -r '.bitcoin.gbp'); [ -n "$btc" ] && espeak "Bitcoin is currently at £$btc"
+# DAILY 21:00 btc=$(curl -s "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=gbp" | jq -r '.bitcoin.gbp'); [ -n "$btc" ] && RHVoice-test -p slt <<< "Bitcoin is currently at £$btc"
